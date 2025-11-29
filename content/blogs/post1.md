@@ -1,13 +1,13 @@
 ---
-title: Sample Blog Post
+title: Sample Blog Post 1
 date: 2025-01-01
 ---
 
-# Sample Blog Post
+hello, I am just rlkajdfaf 
+adfas fasf
+<!-- ![](../img/sample.jpg) -->
 
-![](../img/sample.jpg)
-
->This is an example blog post written in Markdown. It demonstrates images, code blocks, and LaTeX.
+>This is an example blog post written in Markdown. It demonstrates images, code blocks, and LaTeX.adaf
 
 ## Math example
 

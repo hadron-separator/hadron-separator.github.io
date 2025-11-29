@@ -128,9 +128,214 @@ if (postBackBtn) {
     });
 }
 
+// Parse frontmatter from markdown
+function parseFrontmatter(md) {
+    const frontmatterRegex = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
+    const match = md.match(frontmatterRegex);
+    
+    if (!match) return { meta: {}, content: md };
+    
+    const frontmatterStr = match[1];
+    const content = match[2];
+    const meta = {};
+    
+    // Parse YAML-like frontmatter
+    frontmatterStr.split('\n').forEach(line => {
+        const [key, ...valueParts] = line.split(':');
+        if (key) {
+            meta[key.trim()] = valueParts.join(':').trim();
+        }
+    });
+    
+    return { meta, content };
+}
+
+// Extract first N lines from markdown content
+function getFirstLines(md, lines = 5) {
+    const textLines = md.split('\n').filter(line => line.trim().length > 0);
+    return textLines.slice(0, lines).join('\n');
+}
+
+// Load and render all blogs directly on the page
+async function loadAllBlogs() {
+    const blogsContainer = document.getElementById('blogs-container');
+    if (!blogsContainer) return;
+
+    // Hardcoded list of blog files (since we can't list directories via HTTP)
+    const blogFiles = ['post1.md', 'post2.md', 'post3.md', 'post4.md', 'post5.md'];
+    const blogPosts = [];
+
+    // Fetch and parse each blog file
+    for (const file of blogFiles) {
+        const path = `content/blogs/${file}`;
+        try {
+            const res = await fetch(path);
+            if (res.ok) {
+                const md = await res.text();
+                const { meta, content } = parseFrontmatter(md);
+                
+                // Extract date from frontmatter, fallback to filename
+                let date = new Date(meta.date) || new Date(0);
+                if (isNaN(date.getTime())) {
+                    date = new Date(0);
+                }
+                
+                blogPosts.push({
+                    path,
+                    file,
+                    date,
+                    meta,
+                    title: meta.title || file.replace('.md', ''),
+                    content,
+                    fullMd: md
+                });
+            }
+        } catch (err) {
+            // Silently skip files that don't exist
+            console.error(`Could not load ${path}:`, err);
+        }
+    }
+
+    // Sort blogs by date (latest first)
+    blogPosts.sort((a, b) => b.date - a.date);
+
+    if (blogPosts.length === 0) {
+        blogsContainer.innerHTML = '<p>No blog posts available.</p>';
+        console.error('No blog posts were loaded. Check that content/blogs/*.md files exist and are accessible.');
+        return;
+    }
+
+    // Render latest blog fully above the TOC
+    let html = '';
+    const latest = blogPosts[0];
+
+    // Clean title (remove any accidental 'title:' prefix)
+    function cleanTitle(raw) {
+        if (!raw) return '';
+        return raw.replace(/^title:\s*/i, '').trim();
+    }
+
+    // Prefer parsed frontmatter title when available
+    const latestTitle = cleanTitle((latest.meta && latest.meta.title) ? latest.meta.title : latest.title);
+
+    // Remove top-level markdown heading from the content if it duplicates the frontmatter title
+    function removeLeadingHeading(md, title) {
+        const lines = md.split('\n');
+        let i = 0;
+        // skip empty lines
+        while (i < lines.length && lines[i].trim() === '') i++;
+        if (i >= lines.length) return md;
+        const first = lines[i].trim();
+        const headingMatch = first.match(/^\s{0,3}#{1,6}\s+(.*)$/);
+        if (headingMatch) {
+            const headingText = headingMatch[1].trim().toLowerCase();
+            if (headingText === (title || '').toLowerCase()) {
+                // remove this line
+                lines.splice(i, 1);
+            }
+        }
+        return lines.join('\n');
+    }
+
+    // Use parsed content (frontmatter stripped) when rendering
+    const latestContentMd = removeLeadingHeading(latest.content, latestTitle);
+    const latestHtml = marked.parse(latestContentMd);
+    const latestClean = DOMPurify.sanitize(latestHtml);
+
+    html += `\n    <div class="latest-full">\n      <div class="latest-header">\n        <h1 class="latest-title">${latestTitle}</h1>\n        <div class="blog-date">${latest.date.toDateString()}</div>\n      </div>\n      <div class="latest-body">${latestClean}</div>\n    </div>\n`;
+
+    // Add table of contents
+    let tocHtml = '<div class="table-of-contents"><h3>All Blog Posts</h3><ul>';
+    blogPosts.forEach((blog, index) => {
+        const displayTitle = cleanTitle((blog.meta && blog.meta.title) ? blog.meta.title : blog.title);
+        tocHtml += `<li><a href="#blog-${index}">${displayTitle}</a></li>`;
+    });
+    tocHtml += '</ul></div>';
+
+    // Render remaining previews (skip index 0)
+    let previews = '';
+    blogPosts.slice(1).forEach((blog, idx) => {
+        const index = idx + 1;
+        const anchorId = `blog-${index}`;
+        const firstLines = getFirstLines(blog.content, 2);
+        const firstLinesHtml = marked.parse(firstLines);
+        const cleanFirstLines = DOMPurify.sanitize(firstLinesHtml);
+        const displayTitle = cleanTitle((blog.meta && blog.meta.title) ? blog.meta.title : blog.title);
+
+        previews += `\n        <div class="blog-preview" id="${anchorId}">\n            <div class="preview-header">\n                <h2 class="blog-title">${displayTitle}</h2>\n                <div class="blog-date">${blog.date.toDateString()}</div>\n            </div>\n            <div class="blog-excerpt">${cleanFirstLines}</div>\n            <button class="read-more-btn" data-blog-id="${index}">Read More</button>\n        </div>\n        `;
+    });
+
+    blogsContainer.innerHTML = html + tocHtml + previews;
+
+    // Attach read more click handlers
+    document.querySelectorAll('.read-more-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const blogId = parseInt(btn.getAttribute('data-blog-id'));
+            openBlogModal(blogPosts[blogId]);
+        });
+    });
+
+    // Render LaTeX in excerpts
+    if (typeof renderMathInElement === 'function') {
+        renderMathInElement(blogsContainer, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false}
+            ]
+        });
+    }
+}
+
+// Open blog in modal for full reading
+function openBlogModal(blog) {
+    // Remove existing modal if any
+    const existingModal = document.getElementById('blog-modal');
+    if (existingModal) existingModal.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'blog-modal';
+    modal.className = 'blog-modal';
+    
+    // Render parsed content (frontmatter removed)
+    const blogHtml = marked.parse(blog.content);
+    const cleanHtml = DOMPurify.sanitize(blogHtml);
+    
+    modal.innerHTML = `
+        <div class="blog-modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-body">${cleanHtml}</div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+
+    // Close button handler
+    modal.querySelector('.modal-close').addEventListener('click', () => {
+        modal.remove();
+    });
+
+    // Close on background click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+
+    // Render LaTeX in modal
+    if (typeof renderMathInElement === 'function') {
+        renderMathInElement(modal.querySelector('.modal-body'), {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false}
+            ]
+        });
+    }
+}
+
 // Attach markdown link handlers on load
 document.addEventListener('DOMContentLoaded', () => {
     attachMarkdownLinks();
+    loadAllBlogs();
 });
 
 // Smooth scrolling for anchor links
