@@ -1,164 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
-    <script
-      src="https://kit.fontawesome.com/a3bc307dab.js"
-      crossorigin="anonymous"
-    ></script>
-    <title>Sreyas</title>
-  </head>
-
-  <body>
-    <nav>
-      <div class="nav">
-        <p class="nav__name">Sreyas</p>
-        <input type="checkbox" id="toggle-nav" class="nav__checkbox" />
-        <label for="toggle-nav" class="nav__toggle"></label>
-        <ul class="nav__list">
-          <li>
-            <a href="./index.html#home" class="nav__link" id="nav-home">HOME</a>
-          </li>
-          <li>
-            <a href="./index.html#about" class="nav__link" id="nav-about">ABOUT ME</a>
-          </li>
-          <li>
-            <a href="./project.html" class="nav__link" id="nav-portfolio">PROJECTS</a>
-          </li>
-          <li>
-            <a href="./contact.html" class="nav__link" id="nav-contact"></a>
-          </li>
-        </ul>
-      </div>
+<head>
+    <meta charset="UTF-8">
+    <title>My Website</title>
+    <link rel="icon" href="img/logo.png">
+    <link rel="stylesheet" href="files/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.css">
+    <!-- Markdown renderer and sanitizer -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js"></script>
+    <!-- KaTeX + auto-render for LaTeX support -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.7/dist/contrib/auto-render.min.js"></script>
+</head>
+  
+  
+    
+    
+    
+    
+    
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <a href="/" class="logo-link">
+                    <img src="img/logo.png" alt="logo" class="logo-img">
+                    <span class="logo-text">My Site</span>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="#" class="nav-link" data-section="home">Home</a>
+                <a href="#" class="nav-link" data-section="blogs">Blogs</a>
+                <a href="#" class="nav-link" data-section="amateur-guide">Amateur's Guide</a>
+                <a href="#" class="nav-link" data-section="timeline">Timeline</a>
+                <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">🌙</button>
+            </div>
+        </div>
     </nav>
 
-    <header id="home" class="header">
-      <div id="container" class="my-2">
-        <div id="dummy"></div>
-        <div id="element">
-          <img src="Me1.png" alt="Sreyas" class="circle-image wow animated zoomIn" data-wow-delay=".1s">
-        </div>
-      </div>
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Section -->
+        <section id="home" class="content-section active">
+            <div class="section-container">
+                <h1>Welcome</h1>
+                <p>Content goes here.</p>
+            </div>
+        </section>
 
-      <!-- <p class="header__para">Welcome, Hope you are doing good !</p> -->
-      <h2 class="header__running">
-        I am <span class="running-text"></span><span class="cursor">|</span>
-      </h2>
-      <a class="header__resume" href="#" target="_blank">Resume</a>
-    </header>
-
-    <main>
-      <section id="about" class="about">
-        <div class="about__img-container">
-          <img src="./Me.png" alt="Sreyas" />
-        </div>
-        <div class="about__right-container">
-          <div class="about__tooltip">HELLO</div>
-          <h2 class="about__name">I'm Sreyas</h2>
-        </div>
-      </div>
-      </section>
-
-      <div class="row">
-        <div class="col mt-4">
-          <div class="timeline-body bg-themed">
-              <div class="timeline-item">
-                <div class="content">
-                  <h2>Student, IIIT Hyderabad</h2>
-                  <h6 class="date">2021 — </h6>
-                  <p>Currently pursuing BTech. in Compter Science + MS. (by Research) in Computer Science</p>
+        <!-- Blogs Section -->
+        <section id="blogs" class="content-section">
+            <div class="section-container">
+                <h1>Blogs</h1>
+                <div class="content-grid">
+                    <div class="content-card">
+                        <h2>Section</h2>
+                        <p>Content goes here.</p>
+                        <a href="#" class="card-link" data-md="content/blogs/post1.md">Open →</a>
+                    </div>
                 </div>
-              </div>
-            
-              <div class="timeline-item">
-                <div class="content">
-                  <h2>ISAQC, Quantum Research Team </h2>
-                  <h6 class="date">2022 — </h6>
-                  <p>Member in Quantum Research Team of the quantum club.</p>
+            </div>
+        </section>
+
+        <!-- Amateur's Guide Section -->
+        <section id="amateur-guide" class="content-section">
+            <div class="section-container">
+                <h1>Amateur's Guide</h1>
+                
+                <!-- Side A Content -->
+                <div class="guide-section">
+                    <h2>Section A</h2>
+                    <div class="content-grid">
+                        <div class="content-card">
+                            <h3><a href="#" data-md="content/guide/guide1.md">Item 1</a></h3>
+                        </div>
+                        <div class="content-card">
+                            <h3><a href="#" data-md="content/guide/guide2.md">Item 2</a></h3>
+                        </div>
+                        <div class="content-card">
+                            <h3><a href="#" data-md="content/guide/guide3.md">Item 3</a></h3>
+                        </div>
+                    </div>
                 </div>
-              </div>            
 
-               <div class="timeline-item">
-                <div class="content">
-                  <h2>CQST, Undergraduate Researcher </h2>
-                  <h6 class="date">Jan 2023 — </h6>
-                  <p>
-                    Undergraduate Researcher at the Centre for Quantum Science and Technology.<br>
-                    Working on Quantum Complexity Theory under the guidance of Professor Uttam Singh.
-                  </p>
+                <!-- Side B Content -->
+                <div class="guide-section">
+                    <h2>Section B</h2>
+                    <div class="content-grid">
+                        <div class="content-card">
+                            <h3><a href="#" data-md="content/guide/guide1.md">Item 1</a></h3>
+                        </div>
+                        <div class="content-card">
+                            <h3><a href="#" data-md="content/guide/guide2.md">Item 2</a></h3>
+                        </div>
+                        <div class="content-card">
+                            <h3><a href="#" data-md="content/guide/guide3.md">Item 3</a></h3>
+                        </div>
+                    </div>
                 </div>
-              </div>            
+            </div>
+        </section>
 
-              <div class="timeline-item">
-                <div class="content">
-                  <h2>QIntern, Research Intern </h2>
-                  <h6 class="date">Jun 2023 — </h6>
-                  <p>
-                    Using Quantum Machine Learning based approach to improve Fraud Detection.
-                  </p>
+        <!-- Post view (renders Markdown) -->
+        <section id="post" class="content-section">
+            <div class="section-container">
+                <div id="post-content"></div>
+                <div style="margin-top:20px;"><button id="postBack" class="card-link">Back</button></div>
+            </div>
+        </section>
+
+        <!-- Timeline Section -->
+        <section id="timeline" class="content-section">
+            <div class="section-container">
+                <h1>Timeline</h1>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h3>Event</h3>
+                        <p>Content goes here.</p>
+                    </div>
                 </div>
-              </div>            
+            </div>
+        </section>
+    </main>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024. All rights reserved.</p>
+    </footer>
 
-          </div>
-        </div>
-        </div>
-
-      <section id="skills" class="skills">
-      </section>
-
-      <section id="portfolio">
-        <h2 class="section-heading"></h2>
-        <div class="projects"></div>
-      </section>
-
-      <section id="contact">
-        <h2 class="section-heading">
-        </h2>
-        <div id="form-result"></div>
-        <div class="contact-container">
-        </div>
-      </section>
-
-      <footer class="footer">
-        <ul class="contact">
-          <li>
-            <a
-              target="_blank"
-              href="https://github.com/Sreyas-03"
-              class="contact__link"
-              style="scale: 1.5"
-            >
-              <i class="contact__icon fab fa-github"></i>Sreyas
-            </a>
-          </li>
-          <li style="padding-left: 15vw;">
-            <a
-              target="_blank"
-              href="https://twitter.com/futuresreyashttps://www.linkedin.com/in/sreyas-saminathan-a739241a/"
-              class="contact__link"
-              style="scale: 1.5"
-            >
-              <i class="contact__icon fab fa-linkedin"></i>Sreyas
-            </a>
-          <li style="padding-left: 15vw; padding: right 5vw;">
-              <a
-                href="sreyas.saminathan@research.iiit.ac.in"
-                class="contact__link"
-                style="scale: 1.5"
-              >
-                <i class="contact__icon far fa-envelope"></i
-                >sreyas.saminathan@research.iiit.ac.in
-              </a>
-            </li>
-          </li>
-        </ul>
-
-      </footer>
-
-    <script src="./data.js"></script>
-    <script src="./script.js"></script>
-  </body>
+    <script src="files/script.js"></script>
+</body>
 </html>
