@@ -161,8 +161,20 @@ async function loadAllBlogs() {
     const blogsContainer = document.getElementById('blogs-container');
     if (!blogsContainer) return;
 
-    // Hardcoded list of blog files (since we can't list directories via HTTP)
-    const blogFiles = ['post1.md', 'post2.md', 'post3.md', 'post4.md', 'post5.md'];
+    // Try to load a blog index JSON listing files. If missing, fall back to hardcoded list.
+    let blogFiles = ['post1.md', 'post2.md', 'post3.md', 'post4.md', 'post5.md'];
+    try {
+        const idxRes = await fetch('content/blogs/index.json');
+        if (idxRes.ok) {
+            const list = await idxRes.json();
+            if (Array.isArray(list) && list.length) {
+                blogFiles = list;
+            }
+        }
+    } catch (err) {
+        // ignore and fall back to default list
+        console.warn('Could not load content/blogs/index.json, using fallback list.');
+    }
     const blogPosts = [];
 
     // Fetch and parse each blog file
@@ -336,6 +348,75 @@ function openBlogModal(blog) {
 document.addEventListener('DOMContentLoaded', () => {
     attachMarkdownLinks();
     loadAllBlogs();
+});
+
+// Attach logo click handler
+function attachLogoHandler() {
+    const logoLink = document.querySelector('.logo-link');
+    if (!logoLink) return;
+    logoLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+        openLogoModal();
+    });
+}
+
+async function openLogoModal() {
+    // Remove existing modal if any
+    const existing = document.getElementById('logo-modal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'logo-modal';
+    modal.className = 'blog-modal';
+
+    // Larger image
+    const logoImg = document.querySelector('.logo-img');
+    const logoSrc = logoImg ? logoImg.getAttribute('src') : 'img/logo.png';
+
+    // Try to fetch content/logo_details.md
+    let detailsHtml = '';
+    try {
+        const res = await fetch('content/logo_details.md');
+        if (res.ok) {
+            const md = await res.text();
+            const { meta, content } = parseFrontmatter(md);
+            detailsHtml = marked.parse(content);
+            detailsHtml = DOMPurify.sanitize(detailsHtml);
+        }
+    } catch (err) {
+        // ignore
+    }
+
+    modal.innerHTML = `
+        <div class="blog-modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-body logo-modal-body">
+                <div class="logo-modal-img"><img src="${logoSrc}" alt="logo"></div>
+                <div class="logo-modal-text">${detailsHtml}</div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Close handlers
+    modal.querySelector('.modal-close').addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+
+    // Render math if present
+    if (typeof renderMathInElement === 'function') {
+        renderMathInElement(modal.querySelector('.modal-body'), {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false}
+            ]
+        });
+    }
+}
+
+// Re-attach handlers on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+    attachLogoHandler();
 });
 
 // Smooth scrolling for anchor links

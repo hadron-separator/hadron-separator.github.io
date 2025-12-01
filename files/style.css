@@ -190,8 +190,8 @@ body {
     border-color: var(--secondary-color);
     box-shadow: none;
 }
-    border-color: var(--secondary-color);
-}
+    /* border-color: var(--secondary-color);
+} */
 
 .content-card h2,
 .content-card h3 {
@@ -253,6 +253,41 @@ body {
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 10px;
     padding-left: 0;
+}
+
+/* Guide columns (minimal) */
+.guide-columns {
+    display: flex;
+    gap: 40px;
+    margin-top: 20px;
+}
+
+.guide-column {
+    flex: 1;
+}
+
+.guide-column h2 {
+    margin-top: 0;
+}
+
+.guide-column ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 12px;
+}
+
+.guide-column li {
+    margin-bottom: 10px;
+}
+
+.guide-column a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.guide-column a:hover {
+    text-decoration: underline;
 }
 
 /* Timeline */
@@ -558,6 +593,26 @@ body {
     height: auto;
     border-radius: 6px;
     margin: 15px 0;
+}
+
+/* Logo modal specific */
+.logo-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
+}
+
+.logo-modal-img img {
+    max-width: 280px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.logo-modal-text {
+    width: 100%;
+    max-width: 700px;
 }
 
 .modal-body a {
