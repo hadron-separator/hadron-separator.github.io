@@ -35,7 +35,10 @@
                 <a href="#" class="nav-link" data-section="home">Home</a>
                 <a href="#" class="nav-link" data-section="blogs">Blogs</a>
                 <a href="#" class="nav-link" data-section="amateur-guide">Amateur's Guide</a>
-                <a href="#" class="nav-link" data-section="timeline">Timeline</a>
+                    <div class="search-wrap">
+                        <input id="siteSearch" type="search" placeholder="Search..." aria-label="Search site">
+                        <div id="searchResults" class="search-results" aria-hidden="true"></div>
+                    </div>
                 <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">🌙</button>
             </div>
         </div>
@@ -46,8 +49,9 @@
         <!-- Home Section -->
         <section id="home" class="content-section active">
             <div class="section-container">
-                <h1>Welcome</h1>
-                <p>Content goes here.</p>
+                <p>Hello! Welcome to my website.</p>
+                <p>Currently I am a final year research student at the centre for quantum science and technology, at IIITH.</p>
+                <p>I seem to develop interest in anything if I get to spend enough time on it. With high probabilty, you will find me interested in Math, Cryptography, Logic, Football. With non negligible probability you will also catch me interested in Philosophy and Literature. Math and logic I believe is the language of the universe; while Cryptography feels like the theoretical simulation of a world that is adverserial, just like the real one sometimes.</p>
             </div>
         </section>
 
@@ -55,6 +59,8 @@
         <section id="blogs" class="content-section">
             <div class="section-container">
                 <h1>Blogs</h1>
+                <p>Trust me guys, I will write something.</p>
+
                 <div id="blogs-container"></div>
             </div>
         </section>
@@ -68,17 +74,13 @@
                     <div class="guide-column">
                         <h2>Section A</h2>
                         <ul>
-                            <li><a href="#" data-md="content/guide/guide1.md">Item 1</a></li>
-                            <li><a href="#" data-md="content/guide/guide2.md">Item 2</a></li>
-                            <li><a href="#" data-md="content/guide/guide3.md">Item 3</a></li>
+                            <li><a href="#" data-md="content/guide/Cryptography.md">Item 1</a></li>
                         </ul>
                     </div>
                     <div class="guide-column">
                         <h2>Section B</h2>
                         <ul>
-                            <li><a href="#" data-md="content/guide/guide1.md">Item 1</a></li>
-                            <li><a href="#" data-md="content/guide/guide2.md">Item 2</a></li>
-                            <li><a href="#" data-md="content/guide/guide3.md">Item 3</a></li>
+                            <li><a href="#" data-md="content/guide/Philosophy.md">Philosophy</a></li>
                         </ul>
                     </div>
                 </div>
@@ -93,7 +95,7 @@
             </div>
         </section>
 
-        <!-- Timeline Section -->
+        <!-- Timeline Section
         <section id="timeline" class="content-section">
             <div class="section-container">
                 <h1>Timeline</h1>
@@ -105,11 +107,11 @@
                 </div>
             </div>
         </section>
-    </main>
+    </main> -->
 
     <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2024. All rights reserved.</p>
+        <p>🄯 2025. All lefts reserved.</p>
     </footer>
 
     <script src="files/script.js"></script>

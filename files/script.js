@@ -344,10 +344,133 @@ function openBlogModal(blog) {
     }
 }
 
+// --- Simple client-side search (no Lunr) ---
+let searchDocs = [];
+
+async function buildSearchIndex() {
+    searchDocs = [];
+    // blogs
+    try {
+        const idxRes = await fetch('content/blogs/index.json');
+        if (idxRes.ok) {
+            const list = await idxRes.json();
+            for (const f of list) {
+                const path = `content/blogs/${f}`;
+                try {
+                    const res = await fetch(path);
+                    if (!res.ok) continue;
+                    const md = await res.text();
+                    const { meta, content } = parseFrontmatter(md);
+                    searchDocs.push({
+                        id: path,
+                        type: 'blog',
+                        title: meta.title || f.replace('.md',''),
+                        date: meta.date || '',
+                        content: content,
+                        path: path
+                    });
+                } catch (e) { }
+            }
+        }
+    } catch (e) { }
+
+    // guides
+    try {
+        const gidx = await fetch('content/guide/index.json');
+        if (gidx.ok) {
+            const glist = await gidx.json();
+            for (const f of glist) {
+                const path = `content/guide/${f}`;
+                try {
+                    const res = await fetch(path);
+                    if (!res.ok) continue;
+                    const md = await res.text();
+                    const { meta, content } = parseFrontmatter(md);
+                    searchDocs.push({
+                        id: path,
+                        type: 'guide',
+                        title: meta.title || f.replace('.md',''),
+                        date: meta.date || '',
+                        content: content,
+                        path: path
+                    });
+                } catch (e) { }
+            }
+        }
+    } catch (e) { }
+}
+
+function renderSearchResults(results) {
+    const container = document.getElementById('searchResults');
+    if (!container) return;
+    container.innerHTML = '';
+    if (!results || results.length === 0) {
+        container.classList.remove('visible');
+        return;
+    }
+    for (const r of results.slice(0,12)) {
+        const div = document.createElement('div');
+        div.className = 'result-item';
+        const a = document.createElement('a');
+        a.href = '#';
+        a.textContent = r.title;
+        a.addEventListener('click', (e)=>{e.preventDefault(); onSearchSelect(r);});
+        const p = document.createElement('p');
+        const snippet = (r.content || '').split('\n').find(l => l.trim().length>0) || '';
+        p.textContent = snippet.slice(0,180) + (snippet.length>180? '...':'');
+        div.appendChild(a);
+        div.appendChild(p);
+        container.appendChild(div);
+    }
+    container.classList.add('visible');
+}
+
+function onSearchSelect(item) {
+    // close results
+    const container = document.getElementById('searchResults');
+    if (container) container.classList.remove('visible');
+    // navigate
+    if (item.type === 'blog') {
+        openBlogModal(item);
+    } else if (item.type === 'guide') {
+        // open in post view
+        previousSection = currentSection || 'home';
+        openAndRenderMarkdown(item.path);
+        // switch nav
+        navLinks.forEach(l=>l.classList.toggle('active', l.getAttribute('data-section')==='amateur-guide'));
+        contentSections.forEach(s=>s.classList.remove('active'));
+        document.getElementById('post').classList.add('active');
+    }
+}
+
 // Attach markdown link handlers on load
 document.addEventListener('DOMContentLoaded', () => {
     attachMarkdownLinks();
     loadAllBlogs();
+    attachLogoHandler();
+
+    // attach search input handler
+    const input = document.getElementById('siteSearch');
+    if (!input) return;
+    input.addEventListener('input', async (e)=>{
+        const q = e.target.value.trim().toLowerCase();
+        if (!q) { renderSearchResults([]); return; }
+        if (searchDocs.length===0) await buildSearchIndex();
+        const results = searchDocs.map(d=>{
+            const hay = ((d.title||'')+ ' ' + (d.content||'')).toLowerCase();
+            const idx = hay.indexOf(q);
+            const score = (idx >=0) ? 100 - idx : -1;
+            return {doc:d, score};
+        }).filter(r=>r.score>=0).sort((a,b)=>b.score - a.score).map(r=>r.doc);
+        renderSearchResults(results);
+    });
+
+    // hide on outside click
+    document.addEventListener('click', (e)=>{
+        const wrap = document.querySelector('.search-wrap');
+        const container = document.getElementById('searchResults');
+        if (!wrap.contains(e.target) && container) container.classList.remove('visible');
+    });
 });
 
 // Attach logo click handler
