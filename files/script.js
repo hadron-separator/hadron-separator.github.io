@@ -494,7 +494,7 @@ async function openLogoModal() {
 
     // Larger image
     const logoImg = document.querySelector('.logo-img');
-    const logoSrc = logoImg ? logoImg.getAttribute('src') : 'img/logo.png';
+    const logoSrc = logoImg ? logoImg.getAttribute('src') : './img/logo_Gospers_glider.gif';
 
     // Try to fetch content/logo_details.md
     let detailsHtml = '';
