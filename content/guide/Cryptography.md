@@ -183,7 +183,7 @@ the presence of an eavesdropper.
 ***Proof:*** 
 <!-- ![[images/NoCPA_using_PRGs.png]] -->
 
-<img src="content/guide/images/NoCPA_using_PRGs.png" alt="CPA security is not possible with just PRGs" width="100%">
+<img src="./content/guide/images/NoCPA_using_PRGs.png" alt="CPA security is not possible with just PRGs" width="100%">
 
 Adversary gives two messages, $M_0=(0^L, 0^L), M_1=(0^L, 1^L)$ to the green Man - Encryption algorithm
 The green man randomly chooses one of $M_0$ and $M_1$ and encrypts it and sends it back to the Adversary
@@ -193,7 +193,7 @@ Now the adversary can check if both the encryptions were the same or not. If bot
 - In CPA attacks, the adversary knows has access to the encryption function. Therefore, given any plaintext, the adversary knows the corresponding ciphertext.
 - The adversary queries the encryption algorithm such that it can maximize the probability of some function of the underlying message vector
 
-<img src="content/guide/images/CPA_sec_defn.png" alt="Alt text" width="100%">
+<img src="./content/guide/images/CPA_sec_defn.png" alt="Alt text" width="100%">
 
 - the adversary has access to the encryption function. Therefore, can encrypt any message it wants, including $m_0, m_1$
 	- For this reason, it is necessary for the messages $m_0, m_1$ to have different encryption each time. Therefore, we need to have probabilistic encryption
@@ -220,14 +220,14 @@ multiple encryptions
 $F : \{0, 1\}^n \times \{0, 1\}^l \rightarrow \{0, 1\}^L$ is a PRF, where the first n-bit input is the "key" of the PRF and the next n-bits is the input "block" to the PRF
 
 
-<img src="content/guide/images/PRF_defn.png" alt="Alt text" width="100%">
+<img src="./content/guide/images/PRF_defn.png" alt="Alt text" width="100%">
 
 Pseudo random permutation - PRP
 The only differnece between PRF and PRP is that, PRP is a bijection
 $\implies$ The input length and output length both are $L$
 
 
-<img src="content/guide/images/PRP_defn.png" alt="Alt text" width="100%">
+<img src="./content/guide/images/PRP_defn.png" alt="Alt text" width="100%">
 
 
 ### CCA Security
