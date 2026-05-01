@@ -87,9 +87,23 @@ async function openAndRenderMarkdown(path) {
         const res = await fetch(path);
         if (!res.ok) throw new Error('Failed to load');
         const md = await res.text();
-        const html = marked.parse(md);
+        const { meta, content } = parseFrontmatter(md);
+        const html = marked.parse(content);
         const clean = DOMPurify.sanitize(html);
-        postContent.innerHTML = clean;
+
+        const title = meta.title ? `<h1>${meta.title}</h1>` : '';
+        const dateText = meta.date ? new Date(meta.date).toDateString() : '';
+        const dateHtml = dateText ? `<div class="post-date">${dateText}</div>` : '';
+
+        postContent.innerHTML = `
+            <article class="post-card markdown-body">
+                <header class="post-meta">
+                    ${title}
+                    ${dateHtml}
+                </header>
+                ${clean}
+            </article>
+        `;
 
         // Render LaTeX (KaTeX auto-render)
         if (typeof renderMathInElement === 'function') {
