@@ -1,26 +1,15 @@
 ---
-title: Sample Blog Post 1
-date: 2025-01-01
+title: Commonplace Book 
+date: 2026-05-01
 ---
+A collection of memorable quotes from various sources that I've consumed.
 
-hello, I am just rlkajdfaf 
-adfas fasf
-<!-- ![](../img/sample.jpg) -->
+## Memorable Quotes
+> *"In theory, theory and practice are the same, but in practice, they are different."* ~Anonymous
 
->This is an example blog post written in Markdown. It demonstrates images, code blocks, and LaTeX.adaf
+I came across this quote on a `#jokes` channel in discord. Personally, it has been a very impactful quote for me. Very simple, but it was a paradigm-shifter for me.
+___
 
-## Math example
+> *"If the brain were simple enough to understand, we would be too simple to understand it."* ~Anonymous
 
-Inline math: $e^{i\\pi} + 1 = 0$.
-
-Display math:
-
-$$
-\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}
-$$
-
-## Code example
-
-```js
-console.log('Hello, world!');
-```
+A classic self-referential statement. This quote need not necessarily be true, but helps me be at peace when I have to make complex decisions. And, does it not sound similar to `Godel's 2nd incompleteness theorem`?
